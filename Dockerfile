@@ -3,14 +3,14 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Install ALL dependencies (including devDependencies for build)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Copy source and build
 COPY . .
 ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_API_URL=${VITE_API_URL:-https://sf-task-328-seamless-production.up.railway.app}
 RUN npm run build
 
 # Production stage
