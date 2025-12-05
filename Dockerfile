@@ -14,7 +14,7 @@ RUN npm install -g serve
 # Copy source and build
 COPY . .
 ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL:-https://sf-task-328-seamless-production.up.railway.app}
+ENV VITE_API_URL=${VITE_API_URL:-https://sf-task-328-production.up.railway.app}
 RUN npm run build
 
 # Railway will set PORT env var
