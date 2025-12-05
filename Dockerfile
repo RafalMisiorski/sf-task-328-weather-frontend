@@ -19,13 +19,14 @@ FROM nginx:alpine
 # Copy built files
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config as template
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+# Default PORT for Railway
+ENV PORT=80
 
-EXPOSE 80
+# Expose dynamic port
+EXPOSE ${PORT}
 
+# Use nginx entrypoint that does envsubst on templates
 CMD ["nginx", "-g", "daemon off;"]
