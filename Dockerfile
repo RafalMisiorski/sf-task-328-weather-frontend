@@ -19,14 +19,18 @@ FROM nginx:alpine
 # Copy built files
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy nginx config as template
-COPY nginx.conf /etc/nginx/templates/default.conf.template
+# Copy nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Default PORT for Railway
-ENV PORT=80
+# Create startup script that substitutes PORT
+RUN echo '#!/bin/sh' > /start.sh && \
+    echo 'PORT=${PORT:-80}' >> /start.sh && \
+    echo 'sed -i "s/listen 80;/listen $PORT;/g" /etc/nginx/conf.d/default.conf' >> /start.sh && \
+    echo 'echo "Starting nginx on port $PORT"' >> /start.sh && \
+    echo 'exec nginx -g "daemon off;"' >> /start.sh && \
+    chmod +x /start.sh
 
-# Expose dynamic port
-EXPOSE ${PORT}
+# Railway will set PORT env var
+EXPOSE 80
 
-# Use nginx entrypoint that does envsubst on templates
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/start.sh"]
