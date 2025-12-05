@@ -1,4 +1,5 @@
-# Build and serve with Node.js
+# Build and serve with Node.js (v3 - force rebuild)
+# Railway: Use serve package for dynamic PORT binding
 FROM node:18-alpine
 
 WORKDIR /app
