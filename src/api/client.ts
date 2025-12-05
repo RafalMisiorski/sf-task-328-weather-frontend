@@ -9,7 +9,7 @@ import * as types from '@/types'
 class APIClient {
   private client: AxiosInstance
 
-  constructor(baseURL: string = import.meta.env.VITE_API_URL || 'http://localhost:8000') {
+  constructor(baseURL: string = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8000') {
     this.client = axios.create({
       baseURL,
       headers: {
